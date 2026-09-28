@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "id": "s_booka",
+  "kind": "pdf",
+  "title": "Interpretability Notes",
+  "original": "original.pdf",
+  "content_sha256": "e96bee52112fb78a3befdad0cedc04fbd6ef995f40cf70d2584a13d232b3469e",
+  "n_lines": 559,
+  "content_bytes": 18643,
+  "anchor_step": 100,
+  "anchors": [
+    [
+      1,
+      0
+    ],
+    [
+      101,
+      3252
+    ],
+    [
+      201,
+      6657
+    ],
+    [
+      301,
+      10053
+    ],
+    [
+      401,
+      13371
+    ],
+    [
+      501,
+      16617
+    ]
+  ],
+  "toc": [
+    {
+      "title": "3 · Probing",
+      "level": 2,
+      "line": 35
+    },
+    {
+      "title": "4 · Features",
+      "level": 2,
+      "line": 166
+    },
+    {
+      "title": "5 · Circuits",
+      "level": 2,
+      "line": 313
+    }
+  ],
+  "pages": [
+    [
+      1,
+      1
+    ],
+    [
+      41,
+      2
+    ],
+    [
+      81,
+      3
+    ],
+    [
+      121,
+      4
+    ],
+    [
+      161,
+      5
+    ],
+    [
+      201,
+      6
+    ],
+    [
+      241,
+      7
+    ],
+    [
+      281,
+      8
+    ],
+    [
+      321,
+      9
+    ],
+    [
+      361,
+      10
+    ],
+    [
+      401,
+      11
+    ],
+    [
+      441,
+      12
+    ],
+    [
+      481,
+      13
+    ],
+    [
+      521,
+      14
+    ]
+  ],
+  "times": null,
+  "assets": [
+    {
+      "path": "assets/fig-003.svg",
+      "line": 181,
+      "caption": "Figure 3: five features in two dimensions",
+      "kind": "figure"
+    }
+  ]
+}

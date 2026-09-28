@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "device_id": "laptop-web",
+  "updated_at": 1758942609000,
+  "my_tags": {
+    "important": {
+      "ts": 1758942600100
+    }
+  },
+  "cards": {
+    "c_0012": {
+      "tags": {
+        "v": [
+          "important"
+        ],
+        "ts": 1758942602000
+      }
+    },
+    "c_0013": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942603000
+      }
+    },
+    "c_0005": {
+      "tags": {
+        "v": [
+          "revisit",
+          "confusing"
+        ],
+        "ts": 1758942604000
+      }
+    }
+  },
+  "topic_decisions": {
+    "t_0004": {
+      "action": "reject",
+      "ts": 1758942605000
+    }
+  }
+}

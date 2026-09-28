@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reading-helper.local/schemas/state.schema.json",
+  "title": "state",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "updated_at": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "copy_prompt": {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "string"
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "v",
+        "ts"
+      ],
+      "additionalProperties": false
+    },
+    "my_tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "ts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ts"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "cards": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^c_[A-Za-z0-9_]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "viewed": {
+            "type": "object",
+            "properties": {
+              "rev": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "ts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "rev",
+              "ts"
+            ],
+            "additionalProperties": false
+          },
+          "explored": {
+            "type": "object",
+            "properties": {
+              "ts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "ts"
+            ],
+            "additionalProperties": false
+          },
+          "known": {
+            "type": "object",
+            "properties": {
+              "v": {
+                "type": "boolean"
+              },
+              "ts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "v",
+              "ts"
+            ],
+            "additionalProperties": false
+          },
+          "tags": {
+            "type": "object",
+            "properties": {
+              "v": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "v",
+              "ts"
+            ],
+            "additionalProperties": false
+          },
+          "split": {
+            "type": "object",
+            "properties": {
+              "v": {
+                "type": "boolean"
+              },
+              "ts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "v",
+              "ts"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    "topic_decisions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^t_[A-Za-z0-9_]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "enum": [
+              "accept",
+              "rename",
+              "combine",
+              "reject"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^[^/]+(/[^/]+){0,2}$",
+            "description": "Topic path, up to 3 levels joined by /"
+          },
+          "ts": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "action",
+          "ts"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "device_id",
+    "updated_at",
+    "cards"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generation": 7,
+  "suggestions": [
+    {
+      "id": "t_0001",
+      "path": "ML/Interpretability/Dictionary learning",
+      "card_ids": [
+        "c_0005",
+        "c_0006"
+      ],
+      "reason": "Two cards are about learning a feature dictionary.",
+      "created_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "t_0002",
+      "path": "ML/Interp/Features",
+      "card_ids": [
+        "c_0003"
+      ],
+      "reason": "Close to an existing topic.",
+      "similar_existing": "ML/Interpretability/Features",
+      "created_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "t_0003",
+      "path": "ML/Interpretability/Causal methods",
+      "card_ids": [
+        "c_0009"
+      ],
+      "reason": "Patching is a causal test.",
+      "created_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "t_0004",
+      "path": "Mind/Attention",
+      "card_ids": [
+        "c_0013"
+      ],
+      "reason": "About human attention.",
+      "created_at": "2026-09-27T03:10:00Z"
+    }
+  ]
+}

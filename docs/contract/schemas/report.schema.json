@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reading-helper.local/schemas/report.schema.json",
+  "title": "report",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "pattern": "^s_[a-z0-9_]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "warning",
+              "failed",
+              "skipped"
+            ]
+          },
+          "chunks_total": {
+            "type": "integer"
+          },
+          "chunks_ok": {
+            "type": "integer"
+          },
+          "retries": {
+            "type": "integer"
+          },
+          "checks": {
+            "type": "object",
+            "properties": {
+              "json_valid": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean"
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ok"
+                ],
+                "additionalProperties": true
+              },
+              "ranges": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean"
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ok"
+                ],
+                "additionalProperties": true
+              },
+              "overlaps": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean"
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ok"
+                ],
+                "additionalProperties": true
+              },
+              "coverage": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean"
+                  },
+                  "covered_pct": {
+                    "type": "number"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "gaps": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    }
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ok",
+                  "covered_pct",
+                  "limit",
+                  "gaps"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "json_valid",
+              "ranges",
+              "overlaps",
+              "coverage"
+            ],
+            "additionalProperties": false
+          },
+          "cards_created": {
+            "type": "integer"
+          },
+          "cards_merged": {
+            "type": "integer"
+          },
+          "splits_applied": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overlap_pairs_kept_apart": {
+            "type": "array",
+            "description": "Pairs of cards from the same source whose lines overlap, that the merge model kept apart (rule A). Optional.",
+            "items": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "pattern": "^c_[A-Za-z0-9_]+$"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^c_[A-Za-z0-9_]+$"
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        },
+        "required": [
+          "source",
+          "title",
+          "status",
+          "chunks_total",
+          "chunks_ok",
+          "retries",
+          "checks",
+          "cards_created",
+          "cards_merged",
+          "splits_applied",
+          "errors"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "started_at",
+    "finished_at",
+    "sources"
+  ],
+  "additionalProperties": false
+}

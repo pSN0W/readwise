@@ -1,0 +1,12 @@
+{
+  "name": "@rh/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared library-reading logic for the reading helper web and mobile apps. Zero runtime dependencies.",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "node --test test/",
+    "typecheck": "npx -y -p typescript@5 tsc -p tsconfig.json"
+  }
+}

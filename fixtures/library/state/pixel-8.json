@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "device_id": "pixel-8",
+  "updated_at": 1758942605000,
+  "copy_prompt": {
+    "v": "You are my tutor. I know the card below at a basic level. Go deeper using the source text. Use simple words. End with one question to check I understood.",
+    "ts": 1758942600000
+  },
+  "my_tags": {
+    "revisit": {
+      "ts": 1758942600000
+    },
+    "important": {
+      "ts": 1758942600000
+    },
+    "confusing": {
+      "ts": 1758942600000
+    },
+    "read later": {
+      "ts": 1758942600000
+    }
+  },
+  "cards": {
+    "c_0001": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942600000
+      },
+      "known": {
+        "v": true,
+        "ts": 1758942600000
+      }
+    },
+    "c_0002": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942600000
+      }
+    },
+    "c_0005": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942600000
+      },
+      "tags": {
+        "v": [
+          "revisit"
+        ],
+        "ts": 1758942600000
+      }
+    },
+    "c_0008": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942600000
+      },
+      "explored": {
+        "ts": 1758942601000
+      },
+      "tags": {
+        "v": [
+          "important"
+        ],
+        "ts": 1758942600000
+      }
+    },
+    "c_0010": {
+      "viewed": {
+        "rev": 1,
+        "ts": 1758942600000
+      },
+      "known": {
+        "v": true,
+        "ts": 1758942600000
+      }
+    }
+  },
+  "topic_decisions": {}
+}

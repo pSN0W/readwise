@@ -1,0 +1,23 @@
+{
+  "id": "EXAMPLE0001",
+  "title": "Talk: looking inside LLMs",
+  "duration": 2890,
+  "chapters": [
+    {
+      "title": "Attention",
+      "start_time": 0
+    },
+    {
+      "title": "Features",
+      "start_time": 0
+    },
+    {
+      "title": "Circuits",
+      "start_time": 0
+    },
+    {
+      "title": "Questions",
+      "start_time": 0
+    }
+  ]
+}

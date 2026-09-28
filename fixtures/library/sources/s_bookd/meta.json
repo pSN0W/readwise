@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "s_bookd",
+  "kind": "pdf",
+  "title": "Focus and Habits",
+  "original": "original.pdf",
+  "content_sha256": "6eeedd4ef7f91709e00746afde8f6af9e188e60aeab981d7bdf9f32e06cb0bb1",
+  "n_lines": 182,
+  "content_bytes": 6005,
+  "anchor_step": 100,
+  "anchors": [
+    [
+      1,
+      0
+    ],
+    [
+      101,
+      3345
+    ]
+  ],
+  "toc": [
+    {
+      "title": "Part 1 · Habits",
+      "level": 2,
+      "line": 5
+    },
+    {
+      "title": "Part 2 · Focus",
+      "level": 2,
+      "line": 87
+    }
+  ],
+  "pages": [
+    [
+      1,
+      1
+    ],
+    [
+      36,
+      2
+    ],
+    [
+      71,
+      3
+    ],
+    [
+      106,
+      4
+    ],
+    [
+      141,
+      5
+    ],
+    [
+      176,
+      6
+    ]
+  ],
+  "times": null,
+  "assets": []
+}

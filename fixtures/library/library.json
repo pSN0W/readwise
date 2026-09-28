@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "generation": 7,
+  "updated_at": "2026-09-27T03:10:00Z",
+  "sources": [
+    {
+      "id": "s_booka",
+      "kind": "pdf",
+      "title": "Interpretability Notes",
+      "authors": [
+        "A. Example"
+      ],
+      "origin": {
+        "filename": "interpretability-notes.pdf"
+      },
+      "added_at": "2026-09-27T03:10:00Z",
+      "status": "ready",
+      "n_lines": 559,
+      "n_cards": 9,
+      "pages": 14,
+      "duration_s": null,
+      "keywords": [
+        "3 · Probing",
+        "4 · Features",
+        "5 · Circuits"
+      ]
+    },
+    {
+      "id": "s_blogb",
+      "kind": "blog",
+      "title": "A post about probes",
+      "authors": [
+        "B. Blogger"
+      ],
+      "origin": {
+        "url": "https://example.com/blog/probes"
+      },
+      "added_at": "2026-09-27T03:10:00Z",
+      "status": "ready",
+      "n_lines": 81,
+      "n_cards": 2,
+      "pages": null,
+      "duration_s": null,
+      "keywords": [
+        "What a probe is",
+        "From probes to autoencoders"
+      ]
+    },
+    {
+      "id": "s_videoc",
+      "kind": "video",
+      "title": "Talk: looking inside LLMs",
+      "authors": [
+        "C. Speaker"
+      ],
+      "origin": {
+        "url": "https://www.youtube.com/watch?v=EXAMPLE0001"
+      },
+      "added_at": "2026-09-27T03:10:00Z",
+      "status": "ready",
+      "n_lines": 301,
+      "n_cards": 4,
+      "pages": null,
+      "duration_s": 2890,
+      "keywords": [
+        "Attention",
+        "Features",
+        "Circuits",
+        "Questions"
+      ]
+    },
+    {
+      "id": "s_bookd",
+      "kind": "pdf",
+      "title": "Focus and Habits",
+      "authors": [
+        "D. Writer"
+      ],
+      "origin": {
+        "filename": "focus-and-habits.pdf"
+      },
+      "added_at": "2026-09-27T03:10:00Z",
+      "status": "ready",
+      "n_lines": 182,
+      "n_cards": 3,
+      "pages": 6,
+      "duration_s": null,
+      "keywords": [
+        "Part 1 · Habits",
+        "Part 2 · Focus"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "path": "ML/Interpretability/Circuits"
+    },
+    {
+      "path": "ML/Interpretability/Features"
+    },
+    {
+      "path": "ML/Interpretability/Probing"
+    },
+    {
+      "path": "ML/Transformers/Attention"
+    },
+    {
+      "path": "Mind/Focus/Deep work"
+    },
+    {
+      "path": "Mind/Habits/Routines"
+    }
+  ]
+}

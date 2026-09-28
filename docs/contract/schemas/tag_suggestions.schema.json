@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reading-helper.local/schemas/tag_suggestions.schema.json",
+  "title": "tag_suggestions",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^t_[A-Za-z0-9_]+$"
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^[^/]+(/[^/]+){0,2}$",
+            "description": "Topic path, up to 3 levels joined by /"
+          },
+          "card_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^c_[A-Za-z0-9_]+$"
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "similar_existing": {
+            "type": "string",
+            "pattern": "^[^/]+(/[^/]+){0,2}$",
+            "description": "Topic path, up to 3 levels joined by /"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "card_ids",
+          "created_at"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "generation",
+    "suggestions"
+  ],
+  "additionalProperties": false
+}

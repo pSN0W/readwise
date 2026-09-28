@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reading-helper.local/schemas/library.schema.json",
+  "title": "library",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^s_[a-z0-9_]+$"
+          },
+          "kind": {
+            "enum": [
+              "pdf",
+              "blog",
+              "video",
+              "markdown"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "origin": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "added_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "enum": [
+              "processing",
+              "ready",
+              "failed"
+            ]
+          },
+          "n_lines": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "n_cards": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "pages": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "duration_s": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "origin",
+          "added_at",
+          "status",
+          "n_lines",
+          "n_cards"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[^/]+(/[^/]+){0,2}$",
+            "description": "Topic path, up to 3 levels joined by /"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "generation",
+    "updated_at",
+    "sources",
+    "topics"
+  ],
+  "additionalProperties": false
+}

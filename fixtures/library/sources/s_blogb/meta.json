@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "id": "s_blogb",
+  "kind": "blog",
+  "title": "A post about probes",
+  "original": "original.html",
+  "content_sha256": "ee19cb27be2a8eb659c05ee25bf3d00cc0483097f70112eefd843f61ce368837",
+  "n_lines": 81,
+  "content_bytes": 2504,
+  "anchor_step": 100,
+  "anchors": [
+    [
+      1,
+      0
+    ]
+  ],
+  "toc": [
+    {
+      "title": "What a probe is",
+      "level": 2,
+      "line": 5
+    },
+    {
+      "title": "From probes to autoencoders",
+      "level": 2,
+      "line": 38
+    }
+  ],
+  "pages": null,
+  "times": null,
+  "assets": []
+}

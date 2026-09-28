@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "generation": 7,
+  "cards": [
+    {
+      "id": "c_0001",
+      "rev": 1,
+      "title": "Linear probe",
+      "what": "Train a tiny linear model on hidden activations to test if some information is inside them.",
+      "why": "You cannot read activations by eye. You need a test that says 'yes, this layer knows the word is a verb'.",
+      "how": "Save the activations for many inputs. Fit logistic regression from activations to the label. Compare accuracy across layers.",
+      "when": "When you ask what a layer knows.",
+      "extra": "Like logistic regression, but the inputs are a network's hidden numbers.",
+      "topics": [
+        "ML/Interpretability/Probing"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 37,
+          "end": 89
+        },
+        {
+          "source": "s_blogb",
+          "start": 7,
+          "end": 33
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0002",
+      "rev": 1,
+      "title": "Probe accuracy trap",
+      "what": "A probe that scores high does not prove the model uses that information.",
+      "why": "People claimed 'the model uses X' from probe scores alone. That was often wrong.",
+      "how": "Compare against a control task, or follow up with a causal test such as activation patching.",
+      "when": "Before you trust any probe result.",
+      "topics": [
+        "ML/Interpretability/Probing"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 90,
+          "end": 160
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0003",
+      "rev": 2,
+      "title": "Superposition",
+      "what": "A network stores more ideas than it has neurons, by packing them at almost-right angles.",
+      "why": "Single neurons are confusing. One neuron fires for cats, cars and French text.",
+      "how": "Each feature is a direction. Sparse features rarely fire together, so their directions can overlap a little.",
+      "when": "Any time you look inside a model.",
+      "extra": "Like PCA, but with more directions than dimensions: $k > d$.",
+      "topics": [
+        "ML/Interpretability/Features"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 168,
+          "end": 181
+        },
+        {
+          "source": "s_videoc",
+          "start": 81,
+          "end": 97
+        }
+      ],
+      "images": [
+        "sources/s_booka/assets/fig-003.svg",
+        "sources/s_videoc/assets/slide-000750.svg"
+      ],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0004",
+      "rev": 1,
+      "title": "Polysemantic neuron",
+      "what": "One neuron takes part in many unrelated ideas.",
+      "why": "It explains why 'what does neuron 42 do?' has no clean answer.",
+      "when": "When a neuron's top examples look random.",
+      "extra": "Opposite: a monosemantic neuron, which means one thing.",
+      "topics": [
+        "ML/Interpretability/Features"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 182,
+          "end": 197
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0005",
+      "rev": 2,
+      "title": "Sparse autoencoder",
+      "what": "A small network that pulls the packed ideas apart, so each unit means one thing.",
+      "why": "Superposition hides features. We need a tool to un-mix them.",
+      "how": "Train a wide autoencoder on the activations with an L1 penalty: $\\mathcal{L} = \\|x-\\hat x\\|^2 + \\lambda\\|h\\|_1$.",
+      "when": "When you want a list of the features a layer uses.",
+      "extra": "Also called dictionary learning.",
+      "topics": [
+        "ML/Interpretability/Features"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 198,
+          "end": 277
+        },
+        {
+          "source": "s_blogb",
+          "start": 40,
+          "end": 79
+        },
+        {
+          "source": "s_videoc",
+          "start": 115,
+          "end": 155
+        }
+      ],
+      "images": [
+        "sources/s_videoc/assets/slide-001080.svg"
+      ],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0006",
+      "rev": 1,
+      "title": "Dead features",
+      "what": "Some autoencoder units never turn on, so they waste space.",
+      "why": "They make the feature list look bigger than it is.",
+      "how": "Count how often each unit fires during training. Re-start the units that never fire.",
+      "when": "When you train your own sparse autoencoder.",
+      "topics": [
+        "ML/Interpretability/Features"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 278,
+          "end": 302
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0007",
+      "rev": 1,
+      "title": "Circuit",
+      "what": "A small group of connected parts inside the model that does one job together.",
+      "why": "Features tell you what is stored. Circuits tell you how it is used.",
+      "how": "Trace which heads and neurons pass information to each other, then test the path by patching.",
+      "when": "When you ask how the model computes an answer.",
+      "topics": [
+        "ML/Interpretability/Circuits"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 315,
+          "end": 416
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0008",
+      "rev": 1,
+      "title": "Induction head",
+      "what": "Two attention heads that work together to copy what came after the last time a token appeared.",
+      "why": "It is the first circuit found that explains in-context learning.",
+      "how": "Head 1 marks each token with the token before it. Head 2 looks for a match and copies the next token.",
+      "when": "When a model repeats patterns from its prompt.",
+      "topics": [
+        "ML/Interpretability/Circuits",
+        "ML/Transformers/Attention"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 417,
+          "end": 469
+        },
+        {
+          "source": "s_videoc",
+          "start": 196,
+          "end": 228
+        }
+      ],
+      "images": [
+        "sources/s_videoc/assets/slide-001860.svg"
+      ],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0009",
+      "rev": 1,
+      "title": "Activation patching",
+      "what": "Swap one part of the network's activations and see what breaks.",
+      "why": "It tests cause, not just correlation. It fixes the probe trap.",
+      "how": "Run a clean input and a broken input. Copy one activation from clean to broken. If the output recovers, that part matters.",
+      "when": "When you want proof that a part matters.",
+      "topics": [
+        "ML/Interpretability/Circuits"
+      ],
+      "refs": [
+        {
+          "source": "s_booka",
+          "start": 509,
+          "end": 556
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0010",
+      "rev": 1,
+      "title": "Attention as lookup",
+      "what": "Attention is a soft dictionary lookup: a query finds matching keys and takes their values.",
+      "how": "$\\mathrm{softmax}(QK^\\top/\\sqrt{d})\\,V$",
+      "when": "Whenever you read transformer code.",
+      "topics": [
+        "ML/Transformers/Attention"
+      ],
+      "refs": [
+        {
+          "source": "s_videoc",
+          "start": 17,
+          "end": 43
+        }
+      ],
+      "images": [
+        "sources/s_videoc/assets/slide-000130.svg"
+      ],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0011",
+      "rev": 1,
+      "title": "Habit loop",
+      "what": "A habit is a cue, then a routine, then a reward. Change the routine, keep the cue.",
+      "why": "Willpower alone fails. Changing the loop works better.",
+      "how": "Write down the cue and the reward. Keep them, and swap in a new routine.",
+      "when": "When you want to stop or start a habit.",
+      "topics": [
+        "Mind/Habits/Routines"
+      ],
+      "refs": [
+        {
+          "source": "s_bookd",
+          "start": 47,
+          "end": 78
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0012",
+      "rev": 1,
+      "title": "Deep focus blocks",
+      "what": "Plan long blocks with no switching. Hard thinking needs time to warm up.",
+      "why": "Short gaps between meetings are too short for hard work.",
+      "how": "Block 90 minutes in the calendar. Turn off messages. Do one task only.",
+      "when": "When you plan a study or coding day.",
+      "topics": [
+        "Mind/Focus/Deep work"
+      ],
+      "refs": [
+        {
+          "source": "s_bookd",
+          "start": 109,
+          "end": 155
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    },
+    {
+      "id": "c_0013",
+      "rev": 1,
+      "title": "Attention residue",
+      "what": "After you switch tasks, part of your mind stays on the old task for a while.",
+      "why": "It explains why checking messages ruins focus even when it is quick.",
+      "when": "When you decide whether to check your phone.",
+      "extra": "Not the same as attention in transformers; the merge step kept them apart.",
+      "topics": [
+        "Mind/Focus/Deep work"
+      ],
+      "refs": [
+        {
+          "source": "s_bookd",
+          "start": 156,
+          "end": 180
+        }
+      ],
+      "images": [],
+      "created_at": "2026-09-27T03:10:00Z",
+      "updated_at": "2026-09-27T03:10:00Z"
+    }
+  ],
+  "retired": [
+    {
+      "id": "c_0099",
+      "into": [
+        "c_0005"
+      ]
+    }
+  ]
+}

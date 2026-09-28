@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "run_id": "run_20260927_0310",
+  "started_at": "2026-09-27T03:10:00Z",
+  "finished_at": "2026-09-27T03:24:00Z",
+  "sources": [
+    {
+      "source": "s_booka",
+      "title": "Interpretability Notes",
+      "status": "warning",
+      "chunks_total": 4,
+      "chunks_ok": 4,
+      "retries": 0,
+      "checks": {
+        "json_valid": {
+          "ok": true
+        },
+        "ranges": {
+          "ok": true
+        },
+        "overlaps": {
+          "ok": true
+        },
+        "coverage": {
+          "ok": false,
+          "covered_pct": 82.6,
+          "limit": 20,
+          "gaps": [
+            [
+              161,
+              167
+            ],
+            [
+              303,
+              314
+            ],
+            [
+              470,
+              508
+            ]
+          ],
+          "detail": "largest gap is 39 lines"
+        }
+      },
+      "cards_created": 9,
+      "cards_merged": 0,
+      "splits_applied": 0,
+      "errors": []
+    },
+    {
+      "source": "s_blogb",
+      "title": "A post about probes",
+      "status": "ok",
+      "chunks_total": 1,
+      "chunks_ok": 1,
+      "retries": 0,
+      "checks": {
+        "json_valid": {
+          "ok": true
+        },
+        "ranges": {
+          "ok": true
+        },
+        "overlaps": {
+          "ok": true
+        },
+        "coverage": {
+          "ok": true,
+          "covered_pct": 82.7,
+          "limit": 20,
+          "gaps": [
+            [
+              34,
+              39
+            ]
+          ],
+          "detail": ""
+        }
+      },
+      "cards_created": 2,
+      "cards_merged": 0,
+      "splits_applied": 0,
+      "errors": []
+    },
+    {
+      "source": "s_videoc",
+      "title": "Talk: looking inside LLMs",
+      "status": "warning",
+      "chunks_total": 2,
+      "chunks_ok": 2,
+      "retries": 0,
+      "checks": {
+        "json_valid": {
+          "ok": true
+        },
+        "ranges": {
+          "ok": true
+        },
+        "overlaps": {
+          "ok": true
+        },
+        "coverage": {
+          "ok": false,
+          "covered_pct": 39.2,
+          "limit": 20,
+          "gaps": [
+            [
+              44,
+              80
+            ],
+            [
+              98,
+              114
+            ],
+            [
+              156,
+              195
+            ]
+          ],
+          "detail": "largest gap is 40 lines"
+        }
+      },
+      "cards_created": 4,
+      "cards_merged": 0,
+      "splits_applied": 0,
+      "errors": []
+    },
+    {
+      "source": "s_bookd",
+      "title": "Focus and Habits",
+      "status": "warning",
+      "chunks_total": 1,
+      "chunks_ok": 1,
+      "retries": 1,
+      "checks": {
+        "json_valid": {
+          "ok": true
+        },
+        "ranges": {
+          "ok": true
+        },
+        "overlaps": {
+          "ok": true
+        },
+        "coverage": {
+          "ok": false,
+          "covered_pct": 57.1,
+          "limit": 20,
+          "gaps": [
+            [
+              79,
+              108
+            ]
+          ],
+          "detail": "largest gap is 30 lines"
+        }
+      },
+      "cards_created": 3,
+      "cards_merged": 0,
+      "splits_applied": 0,
+      "errors": []
+    }
+  ]
+}
