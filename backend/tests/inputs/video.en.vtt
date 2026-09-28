@@ -1,0 +1,26 @@
+WEBVTT
+Kind: captions
+Language: en
+
+00:00:00.000 --> 00:00:04.000
+welcome everyone to
+
+00:00:04.000 --> 00:00:08.000
+welcome everyone to
+the lecture on transformers
+
+00:00:08.000 --> 00:00:14.000
+the lecture on transformers
+today we will cover attention mechanisms
+
+00:00:14.000 --> 00:00:20.000
+today we will cover attention mechanisms
+and how neural networks process sequences
+
+00:00:26.000 --> 00:00:32.000
+now let us examine
+the self-attention mechanism in detail
+
+00:00:32.000 --> 00:00:40.000
+the self-attention mechanism in detail
+with query key and value projections

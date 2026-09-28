@@ -1,0 +1,17 @@
+[
+  {
+    "page_no": 1,
+    "markdown": "# Chapter 1: Introduction\n\nThis is page 1 introduction to mechanistic interpretability.\nWe explore internal representations of deep learning models.\nModels pack multiple features in low-dimensional spaces.",
+    "images": []
+  },
+  {
+    "page_no": 2,
+    "markdown": "## Probing Representations\n\nLinear probes can measure the presence of specific concepts in activations.\nIf a linear classifier achieves high accuracy, the concept is linearly represented.",
+    "images": []
+  },
+  {
+    "page_no": 3,
+    "markdown": "## Future Directions\n\nScaling dictionary learning to frontier models remains a challenging research frontier.\nSparse autoencoders offer a promising path forward.",
+    "images": []
+  }
+]

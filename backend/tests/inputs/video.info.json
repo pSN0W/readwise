@@ -1,0 +1,18 @@
+{
+  "id": "dQw4w9WgXcQ",
+  "title": "Lecture on Transformers",
+  "uploader": "CS Instructor",
+  "duration": 60,
+  "chapters": [
+    {
+      "title": "Introduction",
+      "start_time": 0.0,
+      "end_time": 25.0
+    },
+    {
+      "title": "Self-Attention Mechanism",
+      "start_time": 25.0,
+      "end_time": 60.0
+    }
+  ]
+}
