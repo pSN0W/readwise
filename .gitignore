@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build and distribution outputs
+dist/
+build/
+.next/
+out/
+.expo/
+*.egg-info/
+*.whl
+
+# Test and coverage artifacts
+.pytest_cache/
+.ruff_cache/
+test-results/
+perf-results/
+coverage/
+.nyc_output/
+.scratch/
+raw-video/
+
+# Reading Helper runtime working files
+*.db
+*.db-wal
+*.db-shm
+*.faiss
+rh.lock
+.rh/
+incoming/
+tmp/
+
+# Lockfiles: keep uv.lock, package-lock.json, etc.
+# If rh.lock is generated at runtime, it's ignored above.
+
+# OS and Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+.lavish/
