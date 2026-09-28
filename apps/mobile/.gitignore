@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.scratch/
+test-results/
+playwright-report/
+perf-results/
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
