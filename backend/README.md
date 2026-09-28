@@ -107,6 +107,18 @@ uv run rh status
 
 # Launch local deterministic mock model server for testing/development:
 uv run rh mock-server --port 8801
+
+# Inspect and test model output on a content file:
+uv run rh test-model samples/sample_notes.md
+
+# Compare multiple models side-by-side:
+uv run rh test-model samples/sample_notes.md --model gpt-4o-mini,gpt-4o
+
+# Test with custom endpoint (e.g. local Ollama or vLLM) and temperatures:
+uv run rh test-model samples/sample_notes.md --base-url http://localhost:11434/v1 -m llama3.2 -t 0.0 -t 0.7
+
+# Run via standalone script:
+uv run python scripts/test_model.py samples/sample_notes.md --output results.json
 ```
 
 ### Exit Codes:

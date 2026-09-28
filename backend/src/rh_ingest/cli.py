@@ -5,13 +5,23 @@ from typing import Annotated, Any
 
 import typer
 from rich.console import Console
+from rich.panel import Panel
 from rich.table import Table
 
+from rh_ingest.chunk import Chunk
 from rh_ingest.config import Settings
 from rh_ingest.contract.models import IngestReport
 from rh_ingest.contract.validate import validate_library
+from rh_ingest.inspect import (
+    evaluate_single_option,
+    extract_title_hint,
+    parse_comma_or_list,
+    print_comparison_table,
+    print_run_details,
+)
 from rh_ingest.intake.refs import SourceRef
 from rh_ingest.intake.watcher import InboxWatcher, guess_kind_from_path
+from rh_ingest.llm.prompts import Prompts
 from rh_ingest.lock import FileLock, LockError
 from rh_ingest.pipeline import Pipeline
 from rh_ingest.workdb import Stage
@@ -305,6 +315,201 @@ def status():
     except Exception as e:
         console.print(f"[bold red]Error:[/bold red] {e}")
         raise typer.Exit(code=1)
+
+
+@app.command("test-model")
+def test_model_command(
+    file: Annotated[Path, typer.Argument(help="Path to input text or markdown file")],
+    models: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--model",
+            "-m",
+            help="Model name(s) to test (can be specified multiple times or comma-separated)",
+        ),
+    ] = None,
+    temperatures: Annotated[
+        list[float] | None,
+        typer.Option("--temperature", "-t", help="Temperature(s) to test"),
+    ] = None,
+    mode: Annotated[
+        str,
+        typer.Option(
+            "--mode",
+            help="Operation mode: 'cards' (structured extraction) or 'raw' (direct prompt)",
+        ),
+    ] = "cards",
+    base_url: Annotated[
+        str | None,
+        typer.Option("--base-url", help="Custom LLM API base URL"),
+    ] = None,
+    api_key: Annotated[
+        str | None,
+        typer.Option("--api-key", help="LLM API key"),
+    ] = None,
+    structured_method: Annotated[
+        str | None,
+        typer.Option(
+            "--structured-method",
+            help="Structured output method: json_schema, function_calling, json_mode",
+        ),
+    ] = None,
+    lines: Annotated[
+        str | None,
+        typer.Option("--lines", help="Line range to inspect, e.g. '1:50'"),
+    ] = None,
+    title: Annotated[
+        str | None,
+        typer.Option("--title", help="Document title hint"),
+    ] = None,
+    topics: Annotated[
+        str | None,
+        typer.Option("--topics", help="Comma-separated topics list to supply in prompt"),
+    ] = None,
+    max_desc_words: Annotated[
+        int | None,
+        typer.Option("--max-desc-words", help="Max words allowed for 'what' field (default: 50)"),
+    ] = None,
+    max_tokens: Annotated[
+        int | None,
+        typer.Option("--max-tokens", help="Max output tokens per LLM call"),
+    ] = None,
+    timeout: Annotated[
+        float | None,
+        typer.Option("--timeout", help="Timeout in seconds per LLM call"),
+    ] = None,
+    system_prompt: Annotated[
+        str | None,
+        typer.Option("--system-prompt", help="Custom system prompt override"),
+    ] = None,
+    prompts_dir: Annotated[
+        Path | None,
+        typer.Option("--prompts-dir", help="Directory containing cards.md templates"),
+    ] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "--output", "-o", help="Optional path to write full evaluation output as JSON"
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option("--json", help="Output raw JSON to stdout"),
+    ] = False,
+):
+    """Test and compare LLM model options, parameters, and prompts on input content."""
+    import os
+    import re
+    import sys
+
+    console = Console(file=sys.stderr if json_output else sys.stdout)
+    cfg = get_settings()
+
+    if not file.exists():
+        console.print(f"[bold red]Error:[/bold red] Input file not found: {file}")
+        raise typer.Exit(code=1)
+
+    file_text = file.read_text(encoding="utf-8")
+    all_lines = file_text.splitlines()
+    if not all_lines:
+        console.print(f"[bold red]Error:[/bold red] Input file is empty: {file}")
+        raise typer.Exit(code=1)
+
+    start_line = 1
+    end_line = len(all_lines)
+    if lines:
+        match = re.match(r"^(\d+):(\d+)$", lines.strip())
+        if match:
+            start_line = max(1, int(match.group(1)))
+            end_line = min(len(all_lines), int(match.group(2)))
+        else:
+            console.print(
+                f"[bold red]Invalid --lines format:[/bold red] Expected 'START:END', got {lines}"
+            )
+            raise typer.Exit(code=1)
+
+    chunk_lines = all_lines[start_line - 1 : end_line]
+    doc_title = title or extract_title_hint(all_lines, default=file.stem)
+    topics_list = [t.strip() for t in topics.split(",")] if topics else []
+    max_desc_words_val = max_desc_words or cfg.checks.max_description_words
+
+    raw_models = parse_comma_or_list(models)
+    models_to_test = raw_models if raw_models else [cfg.llm.model]
+
+    if temperatures:
+        temps_to_test = temperatures
+    else:
+        temps_to_test = [cfg.llm.temperature]
+
+    target_base_url = base_url or os.environ.get("OPENAI_BASE_URL") or cfg.llm.base_url
+    target_api_key = (
+        api_key or os.environ.get("OPENAI_API_KEY") or cfg.llm.api_key.get_secret_value()
+    )
+    target_method = structured_method or cfg.llm.structured_method
+    target_max_tokens = max_tokens or cfg.llm.max_tokens
+    target_timeout = timeout or cfg.llm.timeout_s
+
+    p_dir = prompts_dir or cfg.prompts.cards.parent
+    prompts = Prompts.load(p_dir)
+
+    chunk = Chunk(
+        start=start_line,
+        end=end_line,
+        own_end=end_line,
+        idx=0,
+    )
+
+    if not json_output:
+        console.print(
+            Panel(
+                f"[bold cyan]Input File:[/bold cyan] {file} ({len(chunk_lines)} lines, range {start_line}..{end_line})\n"
+                f"[bold cyan]Document Title:[/bold cyan] {doc_title}\n"
+                f"[bold cyan]Models to test:[/bold cyan] {', '.join(models_to_test)}\n"
+                f"[bold cyan]Temperatures:[/bold cyan] {', '.join(str(t) for t in temps_to_test)}\n"
+                f"[bold cyan]Max 'What' Word Limit:[/bold cyan] {max_desc_words_val} words\n"
+                f"[bold cyan]Endpoint:[/bold cyan] {target_base_url}",
+                title="Reading Helper — Model Inspection",
+                border_style="cyan",
+            )
+        )
+
+    results = []
+    for model_name in models_to_test:
+        for temp in temps_to_test:
+            res = evaluate_single_option(
+                content_lines=all_lines,
+                chunk=chunk,
+                title=doc_title,
+                topics=topics_list,
+                model=model_name,
+                temperature=temp,
+                structured_method=target_method,
+                mode=mode,
+                base_url=target_base_url,
+                api_key=target_api_key,
+                max_desc_words=max_desc_words_val,
+                max_tokens=target_max_tokens,
+                timeout_s=target_timeout,
+                prompts=prompts,
+                system_prompt_override=system_prompt,
+                cfg_checks=cfg.checks,
+            )
+            results.append(res)
+            if not json_output:
+                print_run_details(res, max_desc_words=max_desc_words_val, console=console)
+
+    if not json_output and len(results) > 1:
+        print_comparison_table(results, max_desc_words=max_desc_words_val, console=console)
+
+    serialized_results = [r.to_dict() for r in results]
+    if output:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(serialized_results, indent=2), encoding="utf-8")
+        if not json_output:
+            console.print(f"[bold green]✓ Results written to {output}[/bold green]")
+
+    if json_output:
+        sys.stdout.write(json.dumps(serialized_results, indent=2) + "\n")
 
 
 @app.command("mock-server")

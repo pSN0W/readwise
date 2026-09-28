@@ -39,7 +39,7 @@ class Usage:
 class LLMClient:
     """Wrapper around LangChain chat and embeddings for Reading Helper."""
 
-    def __init__(self, llm: LLMSettings, emb: EmbedSettings):
+    def __init__(self, llm: LLMSettings, emb: EmbedSettings | None = None):
         self.cfg = llm
         self.chat = ChatOpenAI(
             base_url=llm.base_url,
@@ -51,14 +51,25 @@ class LLMClient:
             max_retries=llm.max_retries,
             extra_body=llm.extra_body or None,
         )
-        self.emb = OpenAIEmbeddings(
-            base_url=emb.base_url,
-            api_key=emb.api_key.get_secret_value(),
-            model=emb.model,
-            chunk_size=emb.batch,
-            check_embedding_ctx_length=False,
-        )
+        if emb is not None:
+            self.emb = OpenAIEmbeddings(
+                base_url=emb.base_url,
+                api_key=emb.api_key.get_secret_value(),
+                model=emb.model,
+                chunk_size=emb.batch,
+                check_embedding_ctx_length=False,
+            )
+        else:
+            self.emb = None
         self.usage = Usage()
+
+    def chat_text(self, messages: list[BaseMessage]) -> str:
+        resp = self.chat.invoke(messages)
+        if hasattr(resp, "usage_metadata") and resp.usage_metadata:
+            self.usage.add(resp.usage_metadata)
+        elif hasattr(resp, "response_metadata") and "token_usage" in resp.response_metadata:
+            self.usage.add(resp.response_metadata["token_usage"])
+        return str(resp.content)
 
     def chat_json(self, schema: type[T], messages: list[BaseMessage]) -> T:
         method = self.cfg.structured_method
@@ -106,6 +117,8 @@ class LLMClient:
     def embed(self, texts: list[str]) -> np.ndarray:
         if not texts:
             return np.empty((0, 64), dtype="float32")
+        if self.emb is None:
+            raise RuntimeError("Embeddings client was not initialized")
         v = np.asarray(self.emb.embed_documents(texts), dtype="float32")
         if v.ndim == 1:
             v = v.reshape(1, -1)

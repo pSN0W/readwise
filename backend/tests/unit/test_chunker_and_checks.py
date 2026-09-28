@@ -71,7 +71,7 @@ def test_missing_description_check():
     draft = CardDraft(title="Whitespace What", what="   ", start_line=1, end_line=50)
     res = check([draft], chunk, set(), cfg)
     assert not res.ok
-    assert any("missing the mandatory required field \"what\"" in fb for fb in res.feedback_lines)
+    assert any('missing the mandatory required field "what"' in fb for fb in res.feedback_lines)
 
 
 def test_repairs():
