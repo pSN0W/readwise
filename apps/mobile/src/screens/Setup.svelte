@@ -1,7 +1,9 @@
 <script lang="ts">
-  // First run on the phone: pick the library folder and grant "All files access".
+  // First run on the phone: pick the library folder and (Android) grant "All files access".
   import { app } from "../lib/app.svelte.ts";
-  import { allFilesGranted, openAllFilesSettings } from "../lib/platform.ts";
+  import { allFilesGranted, needsAllFiles, openAllFilesSettings, pickFolder } from "../lib/platform.ts";
+
+  const android = needsAllFiles();
 
   let path = $state(app.libraryPath);
   let granted = $state<boolean | null>(null);
@@ -17,6 +19,16 @@
     const text = await app.makeFS(path.trim()).readText("library.json");
     msg = text ? "OK. library.json found." : granted === false ? "Cannot read files yet. Allow All files access first." : "library.json not found in this folder.";
   }
+  async function choose() {
+    try {
+      const p = await pickFolder();
+      if (!p) return;
+      path = p;
+      await test();
+    } catch (e) {
+      msg = (e as Error).message;
+    }
+  }
   async function use() {
     app.setLibraryPath(path.trim());
     await app.open();
@@ -27,6 +39,7 @@
   <h1>Reading helper</h1>
   <p>This app reads your library folder on this phone. It works offline and never calls a model.</p>
 
+  {#if android}
   <section class:ok={granted === true}>
     <h2>1 · All files access</h2>
     {#if granted === true}
@@ -37,14 +50,20 @@
       <p class="small">Turn on "Allow access to manage all files", then come back.</p>
     {/if}
   </section>
+  {/if}
 
   <section>
-    <h2>2 · Library folder</h2>
-    <p class="small">The folder that has <code>library.json</code>.</p>
-    <input class="inp" aria-label="Library folder" bind:value={path} />
+    <h2>{android ? "2 · " : ""}Library folder</h2>
+    <p class="small">The folder that has <code>library.json</code>.{android ? "" : " Pick it in Files (On My iPhone, or your sync app's folder)."}</p>
+    {#if android}
+      <input class="inp" aria-label="Library folder" bind:value={path} />
+    {:else if path}
+      <p class="small"><code>{path}</code></p>
+    {/if}
     <div class="row">
-      <button type="button" class="btn" onclick={test}>Test</button>
-      <button type="button" class="btn primary" onclick={use}>Use this folder</button>
+      <button type="button" class="btn" onclick={choose}>Choose folder…</button>
+      {#if android}<button type="button" class="btn" onclick={test}>Test</button>{/if}
+      <button type="button" class="btn primary" disabled={!path.trim()} onclick={use}>Use this folder</button>
     </div>
     {#if msg}<p class="small">{msg}</p>{/if}
     {#if app.error}<p class="err">{app.error}</p>{/if}

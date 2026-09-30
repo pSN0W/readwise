@@ -1,6 +1,6 @@
-# Reading Helper · Mobile (Android)
+# Reading Helper · Mobile (Android + iOS)
 
-Offline Android companion app for Reading Helper. Built with Svelte 5, Vite 8, TypeScript, and Capacitor 8. Reads and writes directly to the local library folder synchronized via Syncthing.
+Offline Android and iOS companion app for Reading Helper. Built with Svelte 5, Vite 8, TypeScript, and Capacitor 8. Reads and writes directly to the local library folder synchronized via Syncthing.
 
 ---
 
@@ -42,12 +42,16 @@ When opened on a desktop browser, the app automatically presents a realistic web
 
 ## 2. How the App Finds the Library
 
-On Android, the app runs offline and reads the library directory directly from the filesystem using `@capacitor/filesystem` and the native `RangeFile` plugin:
+The app runs offline and reads the library directory directly from the filesystem using `@capacitor/filesystem` and the native `RangeFile` plugin. The folder is chosen with the system folder picker (**Choose folder…** on the Setup screen and in Settings), handled by the native `FolderPicker` plugin.
 
-1. **First Launch (Setup Screen)**: Prompts for the library directory path. The default path is:
-   `/storage/emulated/0/Syncthing/library`
-2. **All Files Access**: Android 11+ (API 30+) requires `MANAGE_EXTERNAL_STORAGE` permission to read shared folders. The Setup screen checks this permission via `AllFilesPlugin` and directs the user to Android system settings if permission is not yet granted.
-3. **Synchronization**: On the phone, install Syncthing-Fork (or official Syncthing), connect to your backend machine, and synchronize the library folder to the local storage path.
+**Android**
+1. **All Files Access**: Android 11+ (API 30+) requires `MANAGE_EXTERNAL_STORAGE` permission to read shared folders. The Setup screen checks this via `AllFilesPlugin` and opens the system setting if needed.
+2. **Choose folder…** opens the system folder browser (`ACTION_OPEN_DOCUMENT_TREE`). The picked folder is turned back into an absolute path (`TreePaths.java`) and read by path, so the fast file I/O stays the same. Folders on internal storage and SD cards work; cloud providers (Drive etc.) are rejected. The path can still be typed by hand; the default is `/storage/emulated/0/Syncthing/library`.
+3. **Synchronization**: install Syncthing-Fork (or official Syncthing) and sync the library folder to local storage.
+
+**iOS**
+1. No permission step. **Choose folder…** opens the Files app picker (`UIDocumentPickerViewController`). The app keeps a bookmark to the folder (`ios/App/App/ReadingHelperPlugins.swift`) and re-opens it on every launch, because the app's container path can change after an update.
+2. The folder can live in the app's own space (Files → On My iPhone → Reading Helper; enabled via `UIFileSharingEnabled`) or in another app's folder that Files can see (e.g. a Syncthing client such as Möbius Sync).
 
 ---
 
@@ -85,6 +89,19 @@ Or open the project in Android Studio:
 npm run android:open
 ```
 
+## 3b. Building the iOS App (needs a Mac with Xcode)
+
+The Xcode project lives in `ios/` (Swift Package Manager, no CocoaPods). App-local plugins (`RangeFile`, `FolderPicker`) are in `ios/App/App/ReadingHelperPlugins.swift` and registered by `MainViewController` (set in `Main.storyboard`).
+
+```bash
+cd apps/mobile
+npm install
+npm run ios:sync   # build web assets and copy into ios/
+npm run ios:open   # open in Xcode, pick your team under Signing & Capabilities, run on a device
+```
+
+A free Apple ID can install on your own device (re-sign every 7 days); the paid developer program is needed for TestFlight.
+
 ---
 
 ## 4. Performance Benchmarks
@@ -104,5 +121,6 @@ Measured on the 50-source, 5,000-card synthetic library with 4× CPU throttling 
 
 ## 5. Known Limitations & Environment Notes
 
-- **Android SDK absent**: Gradle APK assembly (`assembleDebug`) and `RangeReaderTest` were not executed here due to the host environment lacking the Android SDK and Gradle toolchain.
-- **Equivalent Verification**: `RangeReader` logic and byte range slicing were verified via Vitest unit tests in `tests/capfs.test.ts` and `tests/devfs.test.ts`.
+- **Android**: `./gradlew test assembleDebug` passes (`RangeReaderTest`, `TreePathsTest`). Gradle needs a full JDK 21 (with `javac`), not just a JRE.
+- **iOS**: the Swift plugins have not been compiled yet; building needs macOS + Xcode.
+- **Folder picker**: not yet exercised on a physical device on either platform.

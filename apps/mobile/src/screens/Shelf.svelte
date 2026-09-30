@@ -3,7 +3,7 @@
   import { DEFAULT_COPY_PROMPT, type Card } from "@rh/core";
   import { app } from "../lib/app.svelte.ts";
   import { router } from "../lib/router.svelte.ts";
-  import { allFilesGranted, openAllFilesSettings } from "../lib/platform.ts";
+  import { allFilesGranted, needsAllFiles, openAllFilesSettings, pickFolder } from "../lib/platform.ts";
   import SearchButton from "../components/SearchButton.svelte";
 
   const page = $derived(router.route.parts[0] ?? "");
@@ -66,6 +66,16 @@
     const text = await app.makeFS(libPath.trim()).readText("library.json");
     testMsg = text ? "OK. library.json found." : "library.json not found in this folder.";
   }
+  async function choosePath() {
+    try {
+      const p = await pickFolder();
+      if (!p) return;
+      libPath = p;
+      await testPath();
+    } catch (e) {
+      testMsg = (e as Error).message;
+    }
+  }
   async function usePath() {
     app.setLibraryPath(libPath.trim());
     await app.open();
@@ -105,9 +115,13 @@
       <div class="row-i static">
         <b>Library folder</b>
         {#if app.native}
-          <span class="m">The Syncthing folder with library.json.</span>
-          <input class="inp" aria-label="Library folder" bind:value={libPath} />
-          <div class="line"><button type="button" class="btn" onclick={testPath}>Test</button><button type="button" class="btn primary" onclick={usePath}>Use this folder</button><button type="button" class="btn" onclick={openAllFilesSettings}>All files access…</button></div>
+          <span class="m">The synced folder with library.json.</span>
+          {#if needsAllFiles()}
+            <input class="inp" aria-label="Library folder" bind:value={libPath} />
+          {:else}
+            <span class="m"><code>{libPath}</code></span>
+          {/if}
+          <div class="line"><button type="button" class="btn" onclick={choosePath}>Choose folder…</button>{#if needsAllFiles()}<button type="button" class="btn" onclick={testPath}>Test</button>{/if}<button type="button" class="btn primary" onclick={usePath}>Use this folder</button>{#if needsAllFiles()}<button type="button" class="btn" onclick={openAllFilesSettings}>All files access…</button>{/if}</div>
           {#if testMsg}<span class="m">{testMsg}</span>{/if}
         {:else}
           <span class="m">Browser dev mode: the dev server's scratch folder (<code>apps/mobile/.scratch/…</code>).</span>

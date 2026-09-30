@@ -8,6 +8,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(RangeFilePlugin.class);
         registerPlugin(AllFilesPlugin.class);
+        registerPlugin(FolderPickerPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

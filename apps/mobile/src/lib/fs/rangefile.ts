@@ -1,4 +1,5 @@
 // RangeFile: read bytes [start, end) of a file as UTF-8. Native side: android/app/src/main/java/io/onerobot/readinghelper/RangeFilePlugin.java
+// and ios/App/App/ReadingHelperPlugins.swift
 import { registerPlugin } from "@capacitor/core";
 
 export interface RangeFilePlugin {

@@ -6,7 +6,7 @@ import {
 import { feedOrder, parseScope, type FeedFilter, type ScopeKey } from "./feed.ts";
 import { DevFS } from "./fs/devfs.ts";
 import { CapacitorFS, DEFAULT_LIBRARY_PATH } from "./fs/capfs.ts";
-import { copyText, isNative, onResume, store, storeSet } from "./platform.ts";
+import { copyText, isIOS, isNative, onResume, restoreFolder, store, storeSet } from "./platform.ts";
 
 export const DEFAULT_DEVICE_ID = "android-phone";
 const POLL_MS = 30_000;
@@ -44,7 +44,7 @@ class AppStore {
   private derivedCache: { key: unknown; tree: TopicNode } | null = null;
 
   deviceId = $state(store("rh.deviceId") ?? DEFAULT_DEVICE_ID);
-  libraryPath = $state(store("rh.libraryPath") ?? DEFAULT_LIBRARY_PATH);
+  libraryPath = $state(store("rh.libraryPath") ?? (isIOS() ? "" : DEFAULT_LIBRARY_PATH));
 
   get native(): boolean {
     return isNative();
@@ -58,6 +58,8 @@ class AppStore {
   async boot(): Promise<void> {
     mark("rh-boot");
     if (isNative() && !store("rh.libraryPath")) { this.needsSetup = true; this.loading = false; return; }
+    const restored = await restoreFolder();
+    if (restored && restored !== this.libraryPath) this.setLibraryPath(restored);
     await this.open();
     const pollMs = Number(store("rh.pollMs")) || POLL_MS;
     this.pollTimer = setInterval(() => void this.checkUpdate(), pollMs);

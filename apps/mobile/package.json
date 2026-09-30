@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Reading helper Android app (Capacitor + Svelte 5). Reads the library folder offline.",
+  "description": "Reading helper Android and iOS app (Capacitor + Svelte 5). Reads the library folder offline.",
   "scripts": {
     "scratch": "node scripts/make-scratch.mjs .scratch/library",
     "dev": "node scripts/make-scratch.mjs .scratch/library --keep && vite",
@@ -16,6 +16,8 @@
     "perf": "node scripts/gen-synthetic.mjs .scratch/synth --keep && vite build && playwright test -c playwright.perf.config.ts",
     "android:sync": "vite build && cap sync android",
     "android:open": "cap open android",
+    "ios:sync": "vite build && cap sync ios",
+    "ios:open": "cap open ios",
     "record": "node scripts/record-demo.mjs"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "@capacitor/clipboard": "^8.0.1",
     "@capacitor/core": "^8.5.2",
     "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/ios": "^8.5.2",
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/newsreader": "^5.3.0",

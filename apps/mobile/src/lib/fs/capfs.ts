@@ -1,10 +1,12 @@
 // CapacitorFS: LibraryFS over an absolute folder on the phone (the Syncthing library folder).
-// Needs "All files access" (MANAGE_EXTERNAL_STORAGE) to read /storage/emulated/0/...
+// Android needs "All files access" (MANAGE_EXTERNAL_STORAGE) to read /storage/emulated/0/...
+// iOS reads the folder picked in the Files app (FolderPicker keeps access to it).
 import { Capacitor } from "@capacitor/core";
 import { Encoding, Filesystem } from "@capacitor/filesystem";
 import type { LibraryFS } from "@rh/core";
 import { RangeFile } from "./rangefile.ts";
 
+/** Android only. iOS has no fixed shared path: the user always picks the folder. */
 export const DEFAULT_LIBRARY_PATH = "/storage/emulated/0/Syncthing/library";
 
 function hidden(name: string): boolean {
