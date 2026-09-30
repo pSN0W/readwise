@@ -1,6 +1,6 @@
 <script lang="ts">
   // My tags on a card: checkbox list + create. Personal, stored in this device's state file only.
-  import type { Card } from "@rh/core";
+  import { tagColor, type Card } from "@rh/core";
   import { app } from "../lib/app.svelte.ts";
 
   let { card }: { card: Card } = $props();
@@ -38,7 +38,7 @@
 <svelte:document onpointerdown={onDoc} />
 
 <div class="tagrow" bind:this={root} data-testid="tagrow">
-  {#each tags as t (t)}<span class="ptag">#{t}</span>{/each}
+  {#each tags as t (t)}<span class="ptag" style="--tc: {tagColor(t)}">#{t}</span>{/each}
   <button type="button" class="tagbtn" aria-expanded={open} data-testid="tag-dd" onclick={() => { open = !open; if (!open) filterText = ""; }}>＋ tag ▾</button>
   {#if open}
     <div class="ddpanel" role="group" aria-label="My tags" data-testid="tag-panel">
@@ -54,7 +54,7 @@
       {/if}
       <div class="tag-list">
         {#each filteredTags as t (t)}
-          <label><input type="checkbox" checked={tags.includes(t)} onchange={() => toggle(t)} data-tag={t} /> #{t}</label>
+          <label><input type="checkbox" checked={tags.includes(t)} onchange={() => toggle(t)} data-tag={t} /><span class="tdot" style="--tc: {tagColor(t)}"></span>#{t}</label>
         {:else}
           {#if filterText}
             <span class="small no-match">No tags match "{filterText}"</span>

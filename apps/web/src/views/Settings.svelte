@@ -1,6 +1,6 @@
 <script lang="ts">
   // Settings: copy prompt, device id, my tags, theme.
-  import { DEFAULT_COPY_PROMPT } from "@rh/core";
+  import { DEFAULT_COPY_PROMPT, tagColor } from "@rh/core";
   import { app } from "../lib/app.svelte.ts";
   import { applyTheme, prefs, type Theme } from "../lib/prefs.ts";
 
@@ -50,7 +50,7 @@
       <p class="small">Personal. Stored in your device file. Never sent to a model.</p>
       <div class="tags">
         {#each app.myTags() as t (t)}
-          <span class="ptag">#{t} <button type="button" class="x" aria-label="Delete #{t}" onclick={() => app.st?.deleteTag(t)}>×</button></span>
+          <span class="ptag" style="--tc: {tagColor(t)}">#{t} <button type="button" class="x" aria-label="Delete #{t}" onclick={() => app.st?.deleteTag(t)}>×</button></span>
         {/each}
       </div>
       <form class="row" onsubmit={addTag}>

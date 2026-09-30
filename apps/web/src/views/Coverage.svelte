@@ -95,9 +95,9 @@
   .bar2{position:relative;height:34px;background:var(--ground);border:1px solid var(--line);border-radius:4px;overflow:hidden}
   .seg2{position:absolute;top:0;bottom:0;border:0;border-right:1px solid var(--paper);cursor:pointer;padding:0}
   .seg2:hover,.seg2.sel{filter:brightness(1.08);outline:2px solid var(--ink);z-index:1}
-  .seg2.new{background:color-mix(in srgb,var(--accent) 45%,var(--paper))}
-  .seg2.viewed{background:color-mix(in srgb,var(--accent) 22%,var(--paper))}
-  .seg2.explored{background:color-mix(in srgb,var(--good) 55%,var(--paper))}
+  .seg2.new{background:color-mix(in srgb,var(--c-new) 22%,var(--paper))}
+  .seg2.viewed{background:color-mix(in srgb,var(--c-viewed) 55%,var(--paper))}
+  .seg2.explored{background:color-mix(in srgb,var(--c-explored) 60%,var(--paper))}
   .seg2.known{background:color-mix(in srgb,var(--muted) 30%,var(--paper))}
   .gap2{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--muted) 55%,transparent) 0 2px,transparent 2px 6px);z-index:2}
   .gap2.long{background:repeating-linear-gradient(45deg,var(--rule-red) 0 2px,transparent 2px 6px);box-shadow:inset 0 0 0 1px var(--rule-red)}

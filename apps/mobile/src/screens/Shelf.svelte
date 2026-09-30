@@ -1,10 +1,11 @@
 <script lang="ts">
   // P7 My shelf: my tags as shelves, my notes, the copy prompt, settings. Nothing here goes to a model.
-  import { DEFAULT_COPY_PROMPT, type Card } from "@rh/core";
+  import { DEFAULT_COPY_PROMPT, tagColor, type Card } from "@rh/core";
   import { app } from "../lib/app.svelte.ts";
   import { router } from "../lib/router.svelte.ts";
   import { allFilesGranted, needsAllFiles, openAllFilesSettings, pickFolder } from "../lib/platform.ts";
   import SearchButton from "../components/SearchButton.svelte";
+  import CardBadges from "../components/CardBadges.svelte";
 
   const page = $derived(router.route.parts[0] ?? "");
   const tagName = $derived(page === "tag" ? router.route.parts[1] ?? "" : "");
@@ -93,7 +94,8 @@
   <div class="plist">
     {#if page === "tag"}
       {#each tagCards as c (c.id)}
-        <button type="button" class="row-i" data-open={c.id} onclick={() => router.go("feed", [], { scope: "all", card: c.id })}><b>{c.title}</b>{#if c.what}<span class="m">{c.what}</span>{/if}</button>
+        {@const v = app.view(c)}
+        <button type="button" class="row-i surf edge {v.status}" data-open={c.id} onclick={() => router.go("feed", [], { scope: "all", card: c.id })}><b>{c.title}</b>{#if c.what}<span class="m">{c.what}</span>{/if}<CardBadges view={v} /></button>
       {:else}
         <p class="empty">No cards yet. Use the tag menu at the top of a card.</p>
       {/each}
@@ -133,7 +135,7 @@
       <div class="section-h">My tags</div>
       {#each tags as { t, n } (t)}
         <div class="tagline">
-          <button type="button" class="row-i" data-shelf={t} onclick={() => router.go("shelf", ["tag", t])}><b>#{t}</b><span class="m">{n} card{n === 1 ? "" : "s"}</span></button>
+          <button type="button" class="row-i" data-shelf={t} onclick={() => router.go("shelf", ["tag", t])}><b class="tname"><span class="tdot" style="--tc: {tagColor(t)}"></span>#{t}</b><span class="m">{n} card{n === 1 ? "" : "s"}</span></button>
           <button type="button" class="iconbtn del" aria-label={`Delete #${t}`} onclick={() => deleteTag(t)}>×</button>
         </div>
       {/each}
@@ -159,6 +161,7 @@
   .line { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .line .inp { flex: 1; min-width: 140px; }
   .tagline { display: flex; gap: 4px; align-items: stretch; }
+  .tname { display: inline-flex; align-items: center; gap: 8px; }
   .del { font-size: 1.3rem; color: var(--muted); border: 1px solid var(--line); background: var(--paper); }
   .conflict { border-color: var(--rule-red); cursor: default; }
   textarea { resize: vertical; }

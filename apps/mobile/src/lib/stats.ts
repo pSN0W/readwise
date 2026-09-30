@@ -11,9 +11,21 @@ export function sourceCards(lib: Library, sourceId: string): Card[] {
   return cs;
 }
 
-export function sourceStats(lib: Library, sourceId: string, view: (c: Card) => CardView): { total: number; read: number; pct: number } {
+export interface SourceStats { total: number; read: number; pct: number; viewed: number; explored: number }
+
+export function sourceStats(lib: Library, sourceId: string, view: (c: Card) => CardView): SourceStats {
   const cs = sourceCards(lib, sourceId);
-  let read = 0;
-  for (const c of cs) if (view(c).status !== "new") read++;
-  return { total: cs.length, read, pct: cs.length ? Math.round((100 * read) / cs.length) : 0 };
+  let viewed = 0, explored = 0;
+  for (const c of cs) {
+    const s = view(c).status;
+    if (s === "explored") explored++;
+    else if (s === "viewed") viewed++;
+  }
+  const read = viewed + explored;
+  return { total: cs.length, read, pct: cs.length ? Math.round((100 * read) / cs.length) : 0, viewed, explored };
+}
+
+/** Width (%) of each meter segment. */
+export function meterParts(s: SourceStats): { ex: number; vw: number } {
+  return s.total ? { ex: (100 * s.explored) / s.total, vw: (100 * s.viewed) / s.total } : { ex: 0, vw: 0 };
 }

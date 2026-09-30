@@ -171,7 +171,7 @@
       <div class="under" aria-hidden="true"><span class="u-next" bind:this={hintNext}>NEXT →</span><span class="u-copy" bind:this={hintCopy}>← COPY</span></div>
       {#key card.id}
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions, a11y_no_noninteractive_tabindex -->
-        <div class="fc" role="article" tabindex="0" onkeydown={onKey} aria-label={card.title} class:enter={entering} bind:this={el} data-testid="card" data-card-id={card.id}
+        <div class="fc surf {view?.status ?? ''}" role="article" tabindex="0" onkeydown={onKey} aria-label={card.title} class:enter={entering} bind:this={el} data-testid="card" data-card-id={card.id}
           onpointerdown={onDown} onpointermove={onMove} onpointerup={onUp} onpointercancel={onCancel} onclick={onClick}>
           <FeedCard {card} />
         </div>
@@ -201,7 +201,7 @@
   .under { position: absolute; inset: 2px 10px 10px; display: flex; justify-content: space-between; align-items: center; padding: 0 18px; font-family: var(--mono); font-size: .8rem; font-weight: 600; pointer-events: none; }
   .u-next { color: var(--accent); opacity: 0; }
   .u-copy { color: var(--good); opacity: 0; }
-  .fc { position: relative; height: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; user-select: none; -webkit-user-select: none; will-change: transform; scroll-behavior: smooth; }
+  .fc { position: relative; height: 100%; background: var(--surface, var(--paper)); border: 1px solid var(--surface-line, var(--line)); transition: background-color .3s ease, border-color .3s ease; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; user-select: none; -webkit-user-select: none; will-change: transform; scroll-behavior: smooth; }
   .fc.enter { animation: enter .14s ease-out; }
   @keyframes enter { from { transform: translateX(28px); opacity: .5; } to { transform: none; opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .fc.enter { animation: none; } }

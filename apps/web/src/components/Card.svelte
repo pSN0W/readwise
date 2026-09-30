@@ -36,7 +36,8 @@
 </script>
 
 <article
-  class="rcard {mode}"
+  class="rcard {mode} surf {v.known ? '' : v.status}"
+  class:edge={mode !== "big" && !v.known}
   class:cur={current}
   class:known={v.known}
   class:unrevealed={scrollReveal && !revealed && !v.known}
@@ -122,9 +123,10 @@
 </article>
 
 <style>
-  .rcard{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:.86rem;min-width:0}
+  .rcard{background-color:var(--surface,var(--paper));border:1px solid var(--surface-line,var(--line));transition:background-color .3s ease,border-color .3s ease;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:.86rem;min-width:0}
+  .rcard.edge{background-image:linear-gradient(var(--sc),var(--sc));background-size:4px 100%;background-repeat:no-repeat}
   .rcard.reader{flex:none;content-visibility:auto;contain-intrinsic-size:auto 240px}
-  .rcard.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .rcard.cur{box-shadow:0 0 0 2px var(--accent)}
   .rcard.known{opacity:.7}
   .t{font-family:var(--serif);font-size:1.05rem}
   .big .t{font-size:1.9rem}
@@ -135,7 +137,7 @@
   .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rule-red)}
   .acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
   .acts .btn{font-size:.72rem;padding:2px 8px;text-decoration:none}
-  .cimg{max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:4px;background:var(--paper);align-self:flex-start}
+  .cimg{max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:4px;background:var(--surface,var(--paper));align-self:flex-start}
   .flagbtn{font:inherit;font-size:.7rem;background:none;border:1px dashed var(--line);border-radius:6px;color:var(--muted);padding:3px 8px;cursor:pointer;align-self:flex-start}
   .flagbtn.on{border-color:var(--rule-red);color:var(--rule-red)}
   .big{max-width:680px;width:100%;margin:0 auto;padding:28px 32px;border-radius:10px;gap:12px}

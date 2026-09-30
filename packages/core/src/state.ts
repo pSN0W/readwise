@@ -266,3 +266,22 @@ export class StateStore {
 export function normalizeTag(tag: string): string {
   return tag.trim().replace(/^#+/, "").replace(/\s+/g, " ").toLowerCase();
 }
+
+// Tag colors: the default tags have fixed colors, custom tags hash into a small pool.
+// The CSS variables (--t-*) are defined in each app's app.css.
+const TAG_FIXED: Record<string, string> = {
+  revisit: "var(--t-revisit)",
+  important: "var(--t-important)",
+  confusing: "var(--t-confusing)",
+  "read later": "var(--t-later)",
+};
+const TAG_POOL = ["var(--t-5)", "var(--t-6)", "var(--t-7)", "var(--t-8)", "var(--t-revisit)", "var(--t-important)", "var(--t-confusing)", "var(--t-later)"];
+
+/** CSS color for a tag, stable across sessions and devices. Use as `style="--tc: {tagColor(t)}"`. */
+export function tagColor(tag: string): string {
+  const fixed = TAG_FIXED[tag];
+  if (fixed) return fixed;
+  let h = 0;
+  for (let i = 0; i < tag.length; i++) h = (h * 31 + tag.charCodeAt(i)) >>> 0;
+  return TAG_POOL[h % TAG_POOL.length];
+}

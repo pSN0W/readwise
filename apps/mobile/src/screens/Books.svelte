@@ -4,8 +4,9 @@
   import { tick } from "svelte";
   import { app, mark } from "../lib/app.svelte.ts";
   import { router } from "../lib/router.svelte.ts";
-  import { sourceCards, sourceStats } from "../lib/stats.ts";
+  import { meterParts, sourceCards, sourceStats } from "../lib/stats.ts";
   import BookText from "../components/BookText.svelte";
+  import CardBadges from "../components/CardBadges.svelte";
   import SearchButton from "../components/SearchButton.svelte";
 
   const sid = $derived(router.route.parts[0] ?? null);
@@ -44,15 +45,45 @@
     mark("rh-book-open");
     router.go("books", [id], { mode: "book" });
   }
+  /**
+   * Center a card row, and keep it centered for a moment: rows above it grow after the first
+   * layout (lazy content-visibility, source labels, badges), which would push it off screen.
+   * Stops as soon as the user touches the list.
+   */
+  let stopCentering: (() => void) | null = null;
+  function centerCard(cardId: string) {
+    stopCentering?.();
+    const until = performance.now() + 800;
+    let raf = 0;
+    const list = document.querySelector('[data-testid="source-cards"]');
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      for (const ev of ["pointerdown", "wheel", "touchstart"]) list?.removeEventListener(ev, stop);
+      if (stopCentering === stop) stopCentering = null;
+    };
+    for (const ev of ["pointerdown", "wheel", "touchstart"]) list?.addEventListener(ev, stop, { passive: true });
+    stopCentering = stop;
+    let lastTop = NaN;
+    const step = () => {
+      const el = document.querySelector(`[data-open="${cardId}"]`);
+      const top = el?.getBoundingClientRect().top ?? NaN;
+      if (el && top !== lastTop) { el.scrollIntoView({ block: "center" }); lastTop = el.getBoundingClientRect().top; }
+      if (performance.now() < until) raf = requestAnimationFrame(step);
+      else stop();
+    };
+    step();
+  }
+  $effect(() => () => stopCentering?.());
   async function toCard(cardId: string) {
     router.go("books", [sid as string], { mode: "cards", card: cardId });
     await tick();
     await tick();
-    document.querySelector(`[data-open="${cardId}"]`)?.scrollIntoView({ block: "center" });
+    centerCard(cardId);
   }
   $effect(() => {
     if (mode === "cards" && hl && cards.length) {
-      void tick().then(() => document.querySelector(`[data-open="${hl}"]`)?.scrollIntoView({ block: "center" }));
+      const id = hl;
+      void tick().then(() => centerCard(id));
     }
   });
   function label(id: string, start: number, end: number): string {
@@ -76,11 +107,18 @@
     </div>
     <div class="plist">
       {#each filteredRows as r (r.s.id)}
+        {@const mp = meterParts(r)}
         <button type="button" class="row-i" data-source={r.s.id} onclick={() => openSource(r.s.id)}>
           <b>{r.s.title}</b>
           <span class="m">{kindLabel[r.s.kind]}{r.s.authors?.length ? ` · ${r.s.authors.join(", ")}` : ""}</span>
           <span class="m">{r.total} cards · {r.pct}% read{r.s.status !== "ready" ? ` · ${r.s.status}` : ""}</span>
-          <div class="meter"><i style="width:{r.pct}%"></i></div>
+          <div class="meter split" title="{r.explored} explored · {r.viewed} viewed"><i class="ex" style="width:{mp.ex}%"></i><i class="vw" style="width:{mp.vw}%"></i></div>
+          {#if r.read}
+            <span class="legend">
+              {#if r.explored}<span class="lg"><i class="sw ex"></i>{r.explored} explored</span>{/if}
+              {#if r.viewed}<span class="lg"><i class="sw vw"></i>{r.viewed} viewed</span>{/if}
+            </span>
+          {/if}
         </button>
       {:else}
         {#if bookFilter}
@@ -105,11 +143,11 @@
         {#each cards as c (c.id)}
           {@const v = app.view(c)}
           {@const r = c.refs.find((x) => x.source === sid)}
-          <button type="button" class="row-i cv" class:hl={hl === c.id} data-open={c.id} onclick={() => router.go("feed", [], { scope: `src:${sid}`, card: c.id })}>
+          <button type="button" class="row-i cv surf edge {v.status}" class:hl={hl === c.id} data-open={c.id} onclick={() => router.go("feed", [], { scope: `src:${sid}`, card: c.id })}>
             <b>{c.title}</b>
             {#if c.what}<span>{c.what}</span>{/if}
             <span class="m">{r ? label(sid, r.start, r.end) : ""}{#if c.refs.length > 1} · also in {c.refs.filter((x) => x.source !== sid).map((x) => app.lib?.source(x.source)?.title ?? x.source).join(", ")}{/if}</span>
-            {#if v.status !== "new"}<span class="m">{v.status === "explored" ? "Deeply explored" : "Read before"}{v.updated ? " · Updated" : ""}</span>{/if}
+            <CardBadges view={v} />
           </button>
         {:else}
           <p class="empty">No cards from this source yet.</p>
@@ -120,8 +158,12 @@
 </div>
 
 <style>
-  .cv { content-visibility: auto; contain-intrinsic-size: auto 90px; }
+  .cv { content-visibility: auto; contain-intrinsic-size: auto 124px; }
   .topbar .title { font-size: 1rem; }
   .filter-wrap { padding: 4px 12px 8px; background: var(--ground); }
+  .legend { display: flex; gap: 10px; font-size: .72rem; font-family: var(--mono); color: var(--muted); margin-top: 2px; }
+  .lg { display: inline-flex; align-items: center; gap: 4px; }
+  .sw { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .sw.ex { background: var(--c-explored); } .sw.vw { background: var(--c-viewed); }
   .filter-input { width: 100%; font-size: .85rem; padding: 6px 10px; border-radius: 8px; }
 </style>

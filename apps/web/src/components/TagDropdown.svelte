@@ -1,6 +1,6 @@
 <script lang="ts">
   // My tags dropdown: checkbox list + "create tag". Personal only; saved in this device's state file.
-  import type { Card } from "@rh/core";
+  import { tagColor, type Card } from "@rh/core";
   import { app } from "../lib/app.svelte.ts";
 
   let { card, open = $bindable(false) }: { card: Card; open?: boolean } = $props();
@@ -38,7 +38,7 @@
 <svelte:document onclick={outside} />
 
 <div class="tagrow">
-  {#each v.tags as t (t)}<span class="ptag">#{t}</span>{/each}
+  {#each v.tags as t (t)}<span class="ptag" style="--tc: {tagColor(t)}">#{t}</span>{/each}
   <details class="tagdd" bind:this={el} bind:open>
     <summary aria-label="My tags">＋ tag ▾</summary>
     {#if open}
@@ -54,7 +54,7 @@
           />
         {/if}
         {#each visibleTags as t (t)}
-          <label><input type="checkbox" checked={v.tags.includes(t)} onchange={() => app.toggleTag(card, t)} /> #{t}</label>
+          <label><input type="checkbox" checked={v.tags.includes(t)} onchange={() => app.toggleTag(card, t)} /><span class="tdot" style="--tc: {tagColor(t)}"></span>#{t}</label>
         {:else}
           <span class="small" style="color:var(--muted)">No tags match "{tagFilter}"</span>
         {/each}
